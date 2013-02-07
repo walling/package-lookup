@@ -1,7 +1,7 @@
 {
 	"name" : "package-lookup",
 	"description" : "Info about the package given a filename.",
-	"version" : "0.1.0",
+	"version" : "0.1.1",
 	"author" : {
 		"name" : "Bjarke Walling",
 		"email" : "bwp@bwp.dk"

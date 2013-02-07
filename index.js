@@ -6,7 +6,12 @@ var cache = {};
 
 // TODO: Eager load cache from current filename and traversing paths.
 
-function doCache(uncachedFiles, value) {
+function doCache(uncachedFiles, pkgFile, value) {
+	if (pkgFile && value) {
+		value._filename = pkgFile;
+		value._dirname = path.dirname(pkgFile);
+	}
+
 	uncachedFiles.forEach(function(filename) {
 		cache[filename] = value;
 	});
@@ -28,7 +33,7 @@ pkg.resolveDir = function(dir) {
 	while (true) {
 		var pkgFile = path.normalize(dir + '/package.json');
 		if (pkgFile in cache) {
-			return doCache(uncached, cache[pkgFile]);
+			return doCache(uncached, pkgFile, cache[pkgFile]);
 		}
 
 		uncached.push(pkgFile);
@@ -48,11 +53,11 @@ pkg.resolveDir = function(dir) {
 				if (!(error instanceof SyntaxError)) throw error;
 			}
 
-			return doCache(uncached, pkgInfo || {});
+			return doCache(uncached, pkgFile, pkgInfo || {});
 		}
 
 		var parentDir = path.dirname(dir);
-		if (parentDir === dir) return doCache(uncached, null);
+		if (parentDir === dir) return doCache(uncached, null, null);
 		dir = parentDir;
 	}
 };
